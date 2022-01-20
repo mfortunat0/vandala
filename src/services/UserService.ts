@@ -3,6 +3,8 @@ import { IUserRepository } from "../repositories/IUserRepository";
 import { hash, compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
 import { UserDto } from "../dto/UserDto";
+import { LoginDto } from "../dto/LoginDto";
+
 @injectable()
 export class UserService {
   constructor(
@@ -23,11 +25,12 @@ export class UserService {
     return await this.userRepository.find();
   }
 
-  async login({ email, password }: UserDto) {
+  async login({ email, password }: LoginDto) {
     const user = await this.userRepository.findByEmail(email);
-    if (await compare(password, user.password)) {
+    if (await compare(password, user.hashPassword)) {
       return sign({}, process.env.HASH_TOKEN, {
         subject: user.id,
+        expiresIn: "1d",
       });
     }
   }
