@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { AppError } from "../errors/AppError";
 import { UserRepository } from "../repositories/UserRepository";
 
 const ensureAdmin = async (
@@ -10,7 +11,7 @@ const ensureAdmin = async (
   const userRepository = new UserRepository();
   const user = await userRepository.findById(userId);
   if (!user.admin) {
-    throw new Error("Is not a admin");
+    throw new AppError("Is not a admin", 403);
   }
   next();
 };
