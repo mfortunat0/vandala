@@ -48,4 +48,28 @@ export class UserController {
     const token = await userService.login({ email, password });
     response.json({ token });
   }
+
+  async deposit(request: Request, response: Response) {
+    const { id } = request.params;
+    const { value } = request.body;
+    const userService = container.resolve(UserService);
+    await userService.deposit(id, parseInt(value));
+    response.status(200).send();
+  }
+
+  async withdraw(request: Request, response: Response) {
+    const { id } = request.params;
+    const { value } = request.body;
+    const userService = container.resolve(UserService);
+    await userService.withdraw(id, parseInt(value));
+    response.status(200).send();
+  }
+
+  async transfer(request: Request, response: Response) {
+    const { idFrom, idTo } = request.params;
+    const { value } = request.body;
+    const userService = container.resolve(UserService);
+    await userService.transfer(idFrom, idTo, value);
+    response.status(200).send();
+  }
 }

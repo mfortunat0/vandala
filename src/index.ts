@@ -17,8 +17,11 @@ app.use(
       response.status(error.statusCode).json({
         message: error.message,
       });
+    } else {
+      response.status(500).json({
+        error: error.message,
+      });
     }
-    response.status(500).send();
   }
 );
 

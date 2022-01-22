@@ -6,41 +6,25 @@ import { ensureAuthenticate } from "../middlewares/authMiddleware";
 const userRoutes = Router();
 const userController = new UserController();
 
-userRoutes.get(
-  "/user/:id",
-  ensureAuthenticate,
-  ensureAdmin,
-  userController.findAll
-);
+userRoutes.get("/:id", ensureAuthenticate, userController.findAll);
+userRoutes.get("", ensureAuthenticate, userController.findAll);
+userRoutes.post("", userController.create);
+userRoutes.put("/:id", ensureAuthenticate, userController.update);
 
-userRoutes.get(
-  "/user",
-  ensureAuthenticate,
-  ensureAdmin,
-  userController.findAll
-);
+userRoutes.delete("/:id", ensureAuthenticate, userController.delete);
 
+userRoutes.post("/login", userController.login);
+userRoutes.post("/deposit/:id", ensureAuthenticate, userController.deposit);
+userRoutes.post("/withdraw/:id", ensureAuthenticate, userController.withdraw);
 userRoutes.post(
-  "/user",
+  "/transfer/:idFrom/to/:idTo",
   ensureAuthenticate,
-  ensureAdmin,
-  userController.create
+  userController.transfer
 );
-
-userRoutes.put(
-  "/user/:id",
+userRoutes.post(
+  "/transfer/:idFrom/to/:idTo",
   ensureAuthenticate,
-  ensureAdmin,
-  userController.update
+  userController.transfer
 );
-
-userRoutes.delete(
-  "/user/:id",
-  ensureAuthenticate,
-  ensureAdmin,
-  userController.delete
-);
-
-userRoutes.post("/user/login", userController.login);
 
 export { userRoutes };

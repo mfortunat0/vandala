@@ -19,7 +19,7 @@ export class UserService {
       throw new AppError("User already exists", 400);
     }
     const hashPassword = await hash(password, parseInt(process.env.HASH_SALT));
-    return await this.userRepository.create({
+    return await this.userRepository.createOrUpdate({
       name,
       email,
       password: hashPassword,
@@ -34,17 +34,22 @@ export class UserService {
     return await this.userRepository.findById(id);
   }
 
-  async update(id: string, userDto: UserDto) {
+  async update(id: string, { email, name, password }: UserDto) {
     const user = await this.userRepository.findById(id);
     if (!user) {
       throw new AppError("User not exists", 400);
     }
+
+    password = await hash(password, parseInt(process.env.HASH_SALT));
+
     const updatedUser = {
       ...user,
-      ...userDto,
+      email,
+      name,
+      password,
     };
-    await this.userRepository.create(updatedUser);
-    return updatedUser;
+    const response = await this.userRepository.createOrUpdate(updatedUser);
+    return response;
   }
 
   async delete(id: string) {
@@ -64,5 +69,38 @@ export class UserService {
     } else {
       throw new AppError("User not exists", 400);
     }
+  }
+
+  async deposit(id: string, value: number) {
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+      throw new AppError("User not exists", 400);
+    }
+    user.balance += value;
+    await this.userRepository.createOrUpdate(user);
+    return user;
+  }
+
+  async withdraw(id: string, value: number) {
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+      throw new AppError("User not exists", 400);
+    }
+    if (user.balance < value) {
+      throw new AppError("Not enough balance", 400);
+    }
+    user.balance -= value;
+    await this.userRepository.createOrUpdate(user);
+    return user;
+  }
+
+  async transfer(idFrom: string, idTo: string, value) {
+    const fromUser = await this.userRepository.findById(idFrom);
+    if (fromUser.balance < value) {
+      throw new AppError("Not enough balance", 400);
+    }
+
+    await this.withdraw(idFrom, value);
+    await this.deposit(idTo, value);
   }
 }

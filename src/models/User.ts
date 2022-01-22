@@ -24,6 +24,9 @@ export class User {
   @Column()
   hashPassword: string;
 
+  @Column({ default: 0.0 })
+  balance: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
