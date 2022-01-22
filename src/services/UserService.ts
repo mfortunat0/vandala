@@ -26,8 +26,29 @@ export class UserService {
     });
   }
 
-  async find() {
+  async findAll() {
     return await this.userRepository.find();
+  }
+
+  async findById(id: string) {
+    return await this.userRepository.findById(id);
+  }
+
+  async update(id: string, userDto: UserDto) {
+    const user = await this.userRepository.findById(id);
+    if (!user) {
+      throw new AppError("User not exists", 400);
+    }
+    const updatedUser = {
+      ...user,
+      ...userDto,
+    };
+    await this.userRepository.create(updatedUser);
+    return updatedUser;
+  }
+
+  async delete(id: string) {
+    await this.userRepository.delete(id);
   }
 
   async login({ email, password }: LoginDto) {

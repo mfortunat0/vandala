@@ -9,6 +9,11 @@ export class UserRepository implements IUserRepository {
   constructor() {
     this.repository = getRepository(User);
   }
+
+  async delete(id: string): Promise<void> {
+    await this.repository.delete(id);
+  }
+
   async findById(id: string): Promise<User> {
     return await this.repository.findOne(id);
   }

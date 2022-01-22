@@ -14,10 +14,32 @@ export class UserController {
     response.json(user);
   }
 
-  async find(request: Request, response: Response) {
+  async findAll(request: Request, response: Response) {
     const userService = container.resolve(UserService);
-    const users = await userService.find();
+    const users = await userService.findAll();
     response.json(users);
+  }
+
+  async findById(request: Request, response: Response) {
+    const { id } = request.params;
+    const userService = container.resolve(UserService);
+    const users = await userService.findById(id);
+    response.json(users);
+  }
+
+  async update(request: Request, response: Response) {
+    const { id } = request.params;
+    const { name, email, password } = request.body;
+    const userService = container.resolve(UserService);
+    const users = await userService.update(id, { name, email, password });
+    response.json(users);
+  }
+
+  async delete(request: Request, response: Response) {
+    const { id } = request.params;
+    const userService = container.resolve(UserService);
+    await userService.delete(id);
+    response.status(204).send();
   }
 
   async login(request: Request, response: Response) {
