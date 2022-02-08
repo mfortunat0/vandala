@@ -18,7 +18,7 @@ export class UserService {
     if (userAlreadyExists) {
       throw new AppError("User already exists", 400);
     }
-    const hashPassword = await hash(password, parseInt(process.env.HASH_SALT));
+    const hashPassword = await hash(password, parseInt(process.env.SALT));
     return await this.userRepository.createOrUpdate({
       name,
       email,
@@ -40,7 +40,7 @@ export class UserService {
       throw new AppError("User not exists", 400);
     }
 
-    password = await hash(password, parseInt(process.env.HASH_SALT));
+    password = await hash(password, parseInt(process.env.SALT));
 
     const updatedUser = {
       ...user,
@@ -62,7 +62,7 @@ export class UserService {
       throw new AppError("User not exists", 400);
     }
     if (await compare(password, user.hashPassword)) {
-      return sign({}, process.env.HASH_TOKEN, {
+      return sign({}, process.env.SECRET, {
         subject: user.id,
         expiresIn: "1d",
       });

@@ -13,7 +13,7 @@ const ensureAuthenticate = (
     throw new AppError("Not authorized", 401);
   }
 
-  const payload = verify(token, process.env.HASH_TOKEN);
+  const payload = verify(token, process.env.SECRET);
 
   if (!payload) {
     throw new AppError("Not authorized", 401);
