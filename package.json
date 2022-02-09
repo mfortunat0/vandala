@@ -5,7 +5,9 @@
   "author": "matheus <matheus.xmaz10@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev src/index.ts"
+    "dev": "NODE_ENV=development ts-node-dev src/index.ts",
+    "build": "tsc --build",
+    "start": "NODE_ENV=production node dist/index.js"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",

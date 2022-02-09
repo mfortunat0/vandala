@@ -6,7 +6,10 @@ module.exports = {
   password: process.env.TYPEORM_PASSWORD,
   database: process.env.TYPEORM_DATABASE,
   synchronize: true,
-  entities: ["./src/models/**/*.ts"],
+  entities:
+    process.env.NODE_ENV === "development"
+      ? ["./src/models/**/*.ts"]
+      : ["./dist/models/**/*.js"],
   migrations: ["./src/config/database/migrations/*.ts"],
   cli: {
     migrationsDir: "./src/config/database/migrations",
