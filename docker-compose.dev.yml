@@ -1,0 +1,20 @@
+version: "3"
+services:
+  app:
+    image: node:16.13.2-alpine3.15
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - database
+    restart: always
+    working_dir: /app
+    command: yarn dev
+    volumes:
+      - .:/app
+
+  database:
+    image: postgres:9.6.24-alpine3.15
+    environment:
+      POSTGRES_DB: ${TYPEORM_DATABASE}
+      POSTGRES_USER: ${TYPEORM_USERNAME}
+      POSTGRES_PASSWORD: ${TYPEORM_PASSWORD}
