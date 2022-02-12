@@ -10,6 +10,11 @@
       "get": {
         "summary": "Get all users",
         "tags": ["User"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -29,11 +34,6 @@
       "post": {
         "summary": "Create new user",
         "tags": ["User"],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {

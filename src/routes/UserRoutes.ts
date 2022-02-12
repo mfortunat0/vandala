@@ -11,7 +11,7 @@ userRoutes.put("/:id", ensureAuthenticate, userController.update);
 userRoutes.delete("/:id", ensureAuthenticate, userController.delete);
 
 userRoutes.get("", ensureAuthenticate, userController.findAll);
-userRoutes.post("", ensureAuthenticate, userController.create);
+userRoutes.post("", userController.create);
 
 userRoutes.post("/login", userController.login);
 userRoutes.post("/deposit/:id", ensureAuthenticate, userController.deposit);
