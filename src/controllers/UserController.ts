@@ -16,23 +16,25 @@ export class UserController {
 
   async findAll(request: Request, response: Response) {
     const userService = container.resolve(UserService);
-    const users = await userService.findAll();
+    const users = await (
+      await userService.findAll()
+    ).map(({ hashPassword, ...user }) => ({ ...user }));
     response.json(users);
   }
 
   async findById(request: Request, response: Response) {
     const { id } = request.params;
     const userService = container.resolve(UserService);
-    const users = await userService.findById(id);
-    response.json(users);
+    const { hashPassword, ...user } = await userService.findById(id);
+    response.json(user);
   }
 
   async update(request: Request, response: Response) {
     const { id } = request.params;
     const { name, email, password } = request.body;
     const userService = container.resolve(UserService);
-    const users = await userService.update(id, { name, email, password });
-    response.json(users);
+    await userService.update(id, { name, email, password });
+    response.send();
   }
 
   async delete(request: Request, response: Response) {
